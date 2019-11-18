@@ -56,7 +56,7 @@
                 if (match && _state === STATES.AWAY) {
                     // someone just came home
                     sendCommand(DISABLE_MD + ' on ' + CAM_1);
-                    sendCommand(ENABLE_MD + ' on ' + CAM_2);
+                    sendCommand(DISABLE_MD + ' on ' + CAM_2);
                     updateStateAndInterval(STATES.HOME, SCAN_INTERVALS.HOME);
                     startScanning();
                 } else if (!match && _state === STATES.HOME) {
