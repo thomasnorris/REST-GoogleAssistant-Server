@@ -1,8 +1,8 @@
 (function() {
     var _path = require('path');
     var _readline = require('readline');
+    var _scan = require('local-devices');
     var _assistant = require('google-assistant');
-
     var _assistantConfig = {
         auth: {
             // OAuth2 client_secret_*.json downloaded from Google Actions Console
@@ -14,13 +14,32 @@
             lang: 'en-US'
         }
     };
+    const SCAN_INTERVALS_MS = {
+        AWAY: '2000',
+        HOME: '30000'
+    };
+    const MACS = ['CC:C0:79:F1:8F:47', 'XX:XX:XX:XX:XX:XX'];
+
+    var _scanIntervalMs;
 
     // start the assistant
-    _assistant = new _assistant(_assistantConfig.auth)
-        .on('ready', promptForInput)
-        .on('error', (err) => {
-            console.log('Assistant Error: ' + err);
+    //_assistant = new _assistant(_assistantConfig.auth)
+    //    .on('ready', promptForInput)
+    //    .on('error', (err) => {
+    //        console.log('Assistant Error: ' + err);
+    //    });
+
+    // start network scanning
+    setInterval(scanAndFilter, SCAN_INTERVALS_MS.AWAY);
+
+    function scanAndFilter() {
+        _scan().then((devices) => {
+            var match = devices.some((device) => {
+                return MACS.includes(device.mac.toUpperCase());
+            });
+            console.log(match);
         });
+    }
 
     function startConversation(conversation) {
         conversation

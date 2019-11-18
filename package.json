@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/thomasnorris/NodeGoogleAssistant#readme",
   "dependencies": {
-    "google-assistant": "^0.6.0"
+    "google-assistant": "^0.6.0",
+    "local-devices": "^3.0.0"
   }
 }
