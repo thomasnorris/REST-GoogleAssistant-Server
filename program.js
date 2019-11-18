@@ -13,6 +13,7 @@
             lang: 'en-US'
         }
     };
+
     const SCAN_INTERVALS_MS = {
         AWAY: '2000',
         HOME: '5000'
@@ -28,6 +29,7 @@
             DISABLE_MD: 'Disable motion detection'
         }
     }
+    // upper case here
     const MACS = ['CC:C0:79:F1:8F:47', 'XX:XX:XX:XX:XX:XX'];
 
     var _scanIntervalMs = SCAN_INTERVALS_MS.AWAY;
@@ -50,6 +52,7 @@
             var match = devices.some((device) => {
                 return MACS.includes(device.mac.toUpperCase());
             });
+
             if (match) {
                 // someone is home
                 _scanIntervalMs = SCAN_INTERVALS_MS.HOME;
@@ -68,6 +71,7 @@
         });
     }
 
+    // log to a file maybe?
     function sendCommand(command) {
         _assistantConfig.conversation.textQuery = command;
         _assistant.start(_assistantConfig.conversation, (conversation) => {
