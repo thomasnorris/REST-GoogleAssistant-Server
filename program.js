@@ -7,11 +7,14 @@
     const DISABLE_MD = 'Disable motion detection';
     // MACs should be cupper case
     const MACS = ['CC:C0:79:F1:8F:47', 'XX:XX:XX:XX:XX:XX'];
-    // intervals are in ms
     const SCAN_INTERVALS = {
-        AWAY: '2000',
-        HOME: '5000'
+        HOME: '5000',
+        AWAY: '2000'
     };
+    const STATES = {
+        HOME: 0,
+        AWAY: 1
+    }
 
     var _path = require('path');
     var _scan = require('local-devices');
@@ -29,6 +32,7 @@
     };
 
     var _scanIntervalMs = SCAN_INTERVALS.AWAY;
+    var _state = STATES.AWAY;
 
     // start the assistant and scanning
     _assistant = new _assistant(_assistantConfig.auth)
@@ -48,21 +52,26 @@
                     return MACS.includes(device.mac.toUpperCase());
                 });
 
-                if (match) {
-                    // someone is home
-                    _scanIntervalMs = SCAN_INTERVALS.HOME;
+                if (match && _state === STATES.AWAY) {
+                    // someone just came home
                     sendCommand(DISABLE_MD + ' on ' + CAM_1);
                     sendCommand(ENABLE_MD + ' on ' + CAM_2);
+                    updateStateAndInterval(STATES.HOME, SCAN_INTERVALS.HOME);
                     startScanning();
-                } else {
-                    // no one is home
-                    _scanIntervalMs = SCAN_INTERVALS.AWAY;
+                } else if (!match && _state === STATES.HOME) {
+                    // everyone just left
                     sendCommand(ENABLE_MD + ' on ' + CAM_1);
                     sendCommand(ENABLE_MD + ' on ' + CAM_2);
+                    updateStateAndInterval(STATES.AWAY, SCAN_INTERVALS.AWAY);
                     startScanning();
                 }
             });
         }, _scanIntervalMs);
+
+        function updateStateAndInterval(state, interval) {
+            _state = state,
+            _scanIntervalMs = interval;
+        }
     }
 
     // log to a file maybe?
