@@ -14,25 +14,19 @@
         }
     };
 
-    const SCAN_INTERVALS_MS = {
+    const CAM_1 = 'Doggo Cam';
+    const CAM_2 = 'People (Ellie) Cam';
+    const ENABLE_MD = 'Enable motion detection';
+    const DISABLE_MD = 'Disable motion detection';
+    const SCAN_INTERVALS = {
         AWAY: '2000',
         HOME: '5000'
     };
 
-    const CAMERAS = {
-        NAMES: {
-            CAM_1: 'Doggo Cam',
-            CAM_2: 'People (Ellie) Cam',
-        },
-        COMMANDS: {
-            ENABLE_MD: 'Enable motion detection',
-            DISABLE_MD: 'Disable motion detection'
-        }
-    }
-    // upper case here
+    // upper case
     const MACS = ['CC:C0:79:F1:8F:47', 'XX:XX:XX:XX:XX:XX'];
 
-    var _scanIntervalMs = SCAN_INTERVALS_MS.AWAY;
+    var _scanIntervalMs = SCAN_INTERVALS.AWAY;
     var _interval;
 
     // start the assistant
@@ -44,6 +38,8 @@
 
     // start network scanning
     function startScanning() {
+        if (_interval)
+            clearInterval(_interval);
         _interval = setInterval(scanAndFilter, _scanIntervalMs);
     }
 
@@ -55,17 +51,15 @@
 
             if (match) {
                 // someone is home
-                _scanIntervalMs = SCAN_INTERVALS_MS.HOME;
-                clearInterval(_interval);
-                sendCommand(CAMERAS.COMMANDS.DISABLE_MD + ' on ' + CAMERAS.NAMES.CAM_1);
-                sendCommand(CAMERAS.COMMANDS.ENABLE_MD + ' on ' + CAMERAS.NAMES.CAM_2);
+                _scanIntervalMs = SCAN_INTERVALS.HOME;
+                sendCommand(DISABLE_MD + ' on ' + CAM_1);
+                sendCommand(ENABLE_MD + ' on ' + CAM_2);
                 startScanning();
             } else {
                 // no one is home
-                _scanIntervalMs = SCAN_INTERVALS_MS.AWAY;
-                clearInterval(_interval);
-                sendCommand(CAMERAS.COMMANDS.ENABLE_MD + ' on ' + CAMERAS.NAMES.CAM_1);
-                sendCommand(CAMERAS.COMMANDS.ENABLE_MD + ' on ' + CAMERAS.NAMES.CAM_2);
+                _scanIntervalMs = SCAN_INTERVALS.AWAY;
+                sendCommand(ENABLE_MD + ' on ' + CAM_1);
+                sendCommand(ENABLE_MD + ' on ' + CAM_2);
                 startScanning();
             }
         });
