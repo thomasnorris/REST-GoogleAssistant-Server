@@ -32,6 +32,7 @@
     };
 
     var _scanIntervalMs = SCAN_INTERVALS.AWAY;
+    var _interval;
     var _state = STATES.AWAY;
 
     // start the assistant and scanning
@@ -42,11 +43,11 @@
         });
 
     function startScanning() {
-        var interval;
-        if (interval)
-            clearInterval(interval);
+        console.log('State:', _state);
+        if (_interval)
+            clearInterval(_interval);
 
-        interval = setInterval(() => {
+        _interval = setInterval(() => {
             _scan().then((devices) => {
                 var match = devices.some((device) => {
                     return MACS.includes(device.mac.toUpperCase());
