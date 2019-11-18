@@ -3,7 +3,7 @@
     var _readline = require('readline');
     var _assistant = require('google-assistant');
 
-    var _config = {
+    var _assistantConfig = {
         auth: {
             // OAuth2 client_secret_*.json downloaded from Google Actions Console
             keyFilePath: _path.resolve(__dirname, 'client_secret.json'),
@@ -15,7 +15,8 @@
         }
     };
 
-    _assistant = new _assistant(_config.auth)
+    // start the assistant
+    _assistant = new _assistant(_assistantConfig.auth)
         .on('ready', promptForInput)
         .on('error', (err) => {
             console.log('Assistant Error: ' + err);
@@ -52,8 +53,8 @@
 
         rl.question('Type your request: ', (request) => {
             // start the conversation
-            _config.conversation.textQuery = request;
-            _assistant.start(_config.conversation, startConversation);
+            _assistantConfig.conversation.textQuery = request;
+            _assistant.start(_assistantConfig.conversation, startConversation);
 
             rl.close();
         });
