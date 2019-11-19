@@ -1,92 +1,96 @@
 (function() {
+    var _path = require('path');
+    var _assistant = require('google-assistant');
+    var _express = require('express');
+    var _app = _express();
+
+    const CONFIG_FOLDER = 'config';
     const CLIENT_SECTET_FILE = 'client_secret.json';
     const CLIENT_TOKENS_FILE = 'client_tokens.json';
-    const CAM_1 = 'Doggo Cam';
-    const CAM_2 = 'People (Ellie) Cam';
-    const ENABLE_MD = 'Enable motion detection';
-    const DISABLE_MD = 'Disable motion detection';
-    // MACs should be cupper case
-    const MACS = ['CC:C0:79:F1:8F:47', 'CC:C0:79:83:5B:18'];
-    const SCAN_INTERVALS = {
-        HOME: '5000',
-        AWAY: '2000'
-    };
+    const AUTH_FILE = 'auth.json';
+    const PORT = 1000;
+    const AUTH = readJson(_path.resolve(__dirname, CONFIG_FOLDER, AUTH_FILE));
+    const ENDPOINTS = {
+        SEND: '/send/:command?/:key?'
+    }
 
-    var _path = require('path');
-    var _scan = require('local-devices');
-    var _assistant = require('google-assistant');
     var _assistantConfig = {
         auth: {
             // OAuth2 client_secret_*.json downloaded from Google Actions Console and renamed
-            keyFilePath: _path.resolve(__dirname, CLIENT_SECTET_FILE),
+            keyFilePath: _path.resolve(__dirname, CONFIG_FOLDER, CLIENT_SECTET_FILE),
             // Saved tokens file (will be created if it doesn't exist)
-            savedTokensPath: _path.resolve(__dirname, CLIENT_TOKENS_FILE)
+            savedTokensPath: _path.resolve(__dirname, CONFIG_FOLDER, CLIENT_TOKENS_FILE)
         },
         conversation: {
             lang: 'en-US'
         }
     };
 
-    var _scanIntervalMs = SCAN_INTERVALS.AWAY;
-    var _away = true;
-
-    // start the assistant and scanning
+    // start the assistant
     _assistant = new _assistant(_assistantConfig.auth)
         .on('ready', () => {
-            startScanning(true);
+            ready();
         })
         .on('error', (err) => {
             console.log('Assistant Error: ' + err);
         });
 
-    function startScanning(init = false) {
-        _away ? console.log('Away') : console.log('Home');
+    // listen for commands
+    function ready() {
+        console.log('Ready. Listening on port:', PORT);
+        _app.get(ENDPOINTS.SEND, (req, res) => {
+            var command = req.params.command;
+            if (!command)
+                res.send('No command provided.');
 
-        _scan().then((devices) => {
-            console.log('Scanned', devices.length, 'devices.');
-            var match = devices.some((device) => {
-                return MACS.includes(device.mac.toUpperCase());
-            });
+            else if (!authenticated(req.headers))
+                res.send('Authentication failed.');
 
-            if (match && _away) {
-                // someone just came home
-                sendCommand(DISABLE_MD + ' on ' + CAM_1);
-                sendCommand(DISABLE_MD + ' on ' + CAM_2);
-                _scanIntervalMs = SCAN_INTERVALS.HOME;
-                _away = false;
-            } else if (init || (!match && !_away)) {
-                // everyone just left
-                sendCommand(ENABLE_MD + ' on ' + CAM_1);
-                sendCommand(ENABLE_MD + ' on ' + CAM_2);
-                _scanIntervalMs = SCAN_INTERVALS.AWAY;
-                _away = true;
-            }
-
-            setTimeout(() => {
-                startScanning();
-            }, _scanIntervalMs);
+            else
+                sendCommand(command, (text) => {
+                    res.send(text);
+                });
         });
+
+        function authenticated(headers) {
+            return Object.keys(headers).some((key) => {
+                if (key.toLowerCase() === AUTH.KEY.toLowerCase())
+                    if (headers[key] === AUTH.VALUE)
+                        return true;
+                    return false;
+            });
+        }
     }
 
     // log to a file maybe?
-    function sendCommand(command) {
+    function sendCommand(command, cb) {
         _assistantConfig.conversation.textQuery = command;
         _assistant.start(_assistantConfig.conversation, (conversation) => {
             conversation
                 .on('response', (text) => {
-                    console.log('Assistant Response:', text)
+                    if (!text)
+                        text = 'Command was send but there was no response from Assistant.'
+                    cb(text);
                 })
-                .on('ended', (error) => {
-                    if (error) {
-                        console.log('Conversation Ended Error:', error);
-                    } else {
-                        console.log('Conversation Complete');
-                        //conversation.end();
-                    }
-                })
+                // .on('ended', (error) => {
+                //     if (error) {
+                //         console.log('Conversation Ended Error:', error);
+                //     } else {
+                //         console.log('Conversation Complete');
+                //         //conversation.end();
+                //     }
+                // })
                 .on('error', (error) => {
-                    console.log('Conversation Error:', error);
+                   cb('Assistant Error: ' + error);
                 });
         });
+    }
+
+    _app.set('json spaces', 4);
+    _app.listen(PORT);
+
+    function readJson(filePath) {
+        var fs = require('fs');
+        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
     }
 })();
