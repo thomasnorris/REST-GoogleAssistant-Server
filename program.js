@@ -32,12 +32,14 @@
 
     // start the assistant and scanning
     _assistant = new _assistant(_assistantConfig.auth)
-        .on('ready', startScanning)
+        .on('ready', () => {
+            startScanning(true);
+        })
         .on('error', (err) => {
             console.log('Assistant Error: ' + err);
         });
 
-    function startScanning() {
+    function startScanning(init = false) {
         _away ? console.log('Away') : console.log('Home');
 
         _scan().then((devices) => {
@@ -52,7 +54,7 @@
                 sendCommand(DISABLE_MD + ' on ' + CAM_2);
                 _scanIntervalMs = SCAN_INTERVALS.HOME;
                 _away = false;
-            } else if (!match && !_away) {
+            } else if (init || (!match && !_away)) {
                 // everyone just left
                 sendCommand(ENABLE_MD + ' on ' + CAM_1);
                 sendCommand(ENABLE_MD + ' on ' + CAM_2);
