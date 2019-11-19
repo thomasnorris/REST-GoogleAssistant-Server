@@ -36,33 +36,37 @@
     function ready() {
         console.log('Ready. Listening on port:', PORT);
         _app.get(ENDPOINTS.SEND, (req, res) => {
-            res.set('Content-Type', 'text/html');
             // TODO: validation
             var command = req.params.command;
             if (!command)
-                res.send('<div>No command provided</div>');
-            //sendCommand()
+                res.send('No command provided.');
+            else
+                sendCommand(command, (text) => {
+                    res.send(text);
+                });
         });
     }
 
     // log to a file maybe?
-    function sendCommand(command) {
+    function sendCommand(command, cb) {
         _assistantConfig.conversation.textQuery = command;
         _assistant.start(_assistantConfig.conversation, (conversation) => {
             conversation
                 .on('response', (text) => {
-                    console.log('Assistant Response:', text)
+                    if (!text)
+                        text = 'Command accepted, but no response.'
+                    cb(text);
                 })
-                .on('ended', (error) => {
-                    if (error) {
-                        console.log('Conversation Ended Error:', error);
-                    } else {
-                        console.log('Conversation Complete');
-                        //conversation.end();
-                    }
-                })
+                // .on('ended', (error) => {
+                //     if (error) {
+                //         console.log('Conversation Ended Error:', error);
+                //     } else {
+                //         console.log('Conversation Complete');
+                //         //conversation.end();
+                //     }
+                // })
                 .on('error', (error) => {
-                    console.log('Conversation Error:', error);
+                   cb('Assistant Error: ' + error);
                 });
         });
     }
