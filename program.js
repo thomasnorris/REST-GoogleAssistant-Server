@@ -6,7 +6,7 @@
     const ENABLE_MD = 'Enable motion detection';
     const DISABLE_MD = 'Disable motion detection';
     // MACs should be cupper case
-    const MACS = ['CC:C0:79:F1:8F:47', 'XX:XX:XX:XX:XX:XX'];
+    const MACS = ['CC:C0:79:F1:8F:47', 'CC:C0:79:83:5B:18'];
     const SCAN_INTERVALS = {
         HOME: '5000',
         AWAY: '2000'
@@ -32,7 +32,6 @@
     };
 
     var _scanIntervalMs = SCAN_INTERVALS.AWAY;
-    var _interval;
     var _state = STATES.AWAY;
 
     // start the assistant and scanning
@@ -44,30 +43,29 @@
 
     function startScanning() {
         console.log('State:', _state);
-        if (_interval)
-            clearInterval(_interval);
 
-        _interval = setInterval(() => {
-            _scan().then((devices) => {
-                var match = devices.some((device) => {
-                    return MACS.includes(device.mac.toUpperCase());
-                });
-
-                if (match && _state === STATES.AWAY) {
-                    // someone just came home
-                    sendCommand(DISABLE_MD + ' on ' + CAM_1);
-                    sendCommand(DISABLE_MD + ' on ' + CAM_2);
-                    updateStateAndInterval(STATES.HOME, SCAN_INTERVALS.HOME);
-                    startScanning();
-                } else if (!match && _state === STATES.HOME) {
-                    // everyone just left
-                    sendCommand(ENABLE_MD + ' on ' + CAM_1);
-                    sendCommand(ENABLE_MD + ' on ' + CAM_2);
-                    updateStateAndInterval(STATES.AWAY, SCAN_INTERVALS.AWAY);
-                    startScanning();
-                }
+        _scan().then((devices) => {
+            console.log('Got:', devices.length, 'devices.');
+            var match = devices.some((device) => {
+                return MACS.includes(device.mac.toUpperCase());
             });
-        }, _scanIntervalMs);
+
+            if (match && _state === STATES.AWAY) {
+                // someone just came home
+                sendCommand(DISABLE_MD + ' on ' + CAM_1);
+                sendCommand(DISABLE_MD + ' on ' + CAM_2);
+                updateStateAndInterval(STATES.HOME, SCAN_INTERVALS.HOME);
+            } else if (!match && _state === STATES.HOME) {
+                // everyone just left
+                sendCommand(ENABLE_MD + ' on ' + CAM_1);
+                sendCommand(ENABLE_MD + ' on ' + CAM_2);
+                updateStateAndInterval(STATES.AWAY, SCAN_INTERVALS.AWAY);
+            }
+
+            setTimeout(() => {
+                startScanning();
+            }, _scanIntervalMs);
+        });
 
         function updateStateAndInterval(state, interval) {
             _state = state,
