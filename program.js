@@ -32,6 +32,7 @@
     };
 
     var _scanIntervalMs = SCAN_INTERVALS.AWAY;
+    var _away = true;
     var _state = STATES.AWAY;
 
     // start the assistant and scanning
@@ -42,35 +43,32 @@
         });
 
     function startScanning() {
-        console.log('State:', _state);
+        _away ? console.log('Away') : console.log('Home');
 
         _scan().then((devices) => {
-            console.log('Got:', devices.length, 'devices.');
+            console.log('Scanned', devices.length, 'devices.');
             var match = devices.some((device) => {
                 return MACS.includes(device.mac.toUpperCase());
             });
 
-            if (match && _state === STATES.AWAY) {
+            if (match && _away) {
                 // someone just came home
                 sendCommand(DISABLE_MD + ' on ' + CAM_1);
                 sendCommand(DISABLE_MD + ' on ' + CAM_2);
-                updateStateAndInterval(STATES.HOME, SCAN_INTERVALS.HOME);
-            } else if (!match && _state === STATES.HOME) {
+                _scanIntervalMs = SCAN_INTERVALS.HOME;
+                _away = false;
+            } else if (!match && !_away) {
                 // everyone just left
                 sendCommand(ENABLE_MD + ' on ' + CAM_1);
                 sendCommand(ENABLE_MD + ' on ' + CAM_2);
-                updateStateAndInterval(STATES.AWAY, SCAN_INTERVALS.AWAY);
+                _scanIntervalMs = SCAN_INTERVALS.AWAY;
+                _away = true;
             }
 
             setTimeout(() => {
                 startScanning();
             }, _scanIntervalMs);
         });
-
-        function updateStateAndInterval(state, interval) {
-            _state = state,
-            _scanIntervalMs = interval;
-        }
     }
 
     // log to a file maybe?
