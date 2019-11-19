@@ -11,10 +11,6 @@
         HOME: '5000',
         AWAY: '2000'
     };
-    const STATES = {
-        HOME: 0,
-        AWAY: 1
-    }
 
     var _path = require('path');
     var _scan = require('local-devices');
