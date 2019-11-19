@@ -8,7 +8,7 @@
     const CLIENT_SECTET_FILE = 'client_secret.json';
     const CLIENT_TOKENS_FILE = 'client_tokens.json';
     const AUTH_FILE = 'auth.json';
-    const PORT = 2000;
+    const PORT = 1000;
     const AUTH = readJson(_path.resolve(__dirname, CONFIG_FOLDER, AUTH_FILE));
     const ENDPOINTS = {
         SEND: '/send/:command?/:key?'
