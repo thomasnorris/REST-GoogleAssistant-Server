@@ -14,11 +14,19 @@
     - No *traits* need to be specified.
     - Download __OAuth 2.0__ credentials when prompted and rename to `client_secret.json`. This will be needed later.
 ## Installation
-- Everything in the __Prerequisites__ section must be done first!
-- After cloning:
+- Everything in the __Prerequisites__ section must be completed.
+- It is recommended clone to a Windows machine first to generate the `client_tokens.json` file.
+    - This will be generated upon first run of the program.
+    - Once it is generated, copy it into the __config__ folder.
+- After cloning to the target device (Windows or otherwise):
     - In the `config` folder:
         - Place `client_secret.json` (downloaded earlier) here.
         - Copy/rename `auth_template.json` to `auth.json` and enter a desired auth key/value pair. Requests __must__ use this key/value pair as a header to send requests.
+        - This folder should now contain:
+            - `client_secret.json`
+            - `client_tokens.json`
+            - `auth.json`
+            - `auth_template.json`
     - In the `root` directory:
         - Run `npm install` to install packages.
             - Also run `npm rebuild` if instructed to do so.
