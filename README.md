@@ -1,11 +1,9 @@
 ## Prerequisites
+### Notice
+- As of `11/19/2019`, this will not work on an __ARMv6__ device (such as a RPi Zero W). This will work on an __ARMv7__ device such as the Raspberry Pi 3B.
+    - See [this](https://github.com/grpc/grpc/issues/13258) and [this](https://github.com/mapbox/node-pre-gyp/issues/348).
 ### NPM and Node.js
 - Both of these are required and can be downloaded [here](https://github.com/nodesource/distributions).
-    - If using a Raspberry Pi Zero W, follow [these](https://www.thepolyglotdeveloper.com/2018/03/install-nodejs-raspberry-pi-zero-w-nodesource/) instructions instead.
-### Geeni
-- Geeni is connected to the Google Assistant.
-- The cameras are named the same as in `program.js`.
-    - This can be done through the Google Home app or the Geeni app.
 ### Google Assistant
 - Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/config-dev-project-and-account) instructions to configure a Google Developer Project.
     - Do not download credentials from the OAuth2 Consent screen.
