@@ -78,20 +78,20 @@
         _assistantConfig.conversation.textQuery = command;
         _assistant.start(_assistantConfig.conversation, (conversation) => {
             conversation
-            .on('response', (text) => {
-                console.log('Assistant Response:', text)
-            })
-            .on('ended', (error) => {
-                if (error) {
-                    console.log('Conversation Ended Error:', error);
-                } else {
-                    console.log('Conversation Complete');
-                    //conversation.end();
-                }
-            })
-            .on('error', (error) => {
-                console.log('Conversation Error:', error);
-            });
+                .on('response', (text) => {
+                    console.log('Assistant Response:', text)
+                })
+                .on('ended', (error) => {
+                    if (error) {
+                        console.log('Conversation Ended Error:', error);
+                    } else {
+                        console.log('Conversation Complete');
+                        //conversation.end();
+                    }
+                })
+                .on('error', (error) => {
+                    console.log('Conversation Error:', error);
+                });
         });
     }
 })();
