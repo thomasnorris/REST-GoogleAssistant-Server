@@ -39,15 +39,27 @@
     function ready() {
         console.log('Ready. Listening on port:', PORT);
         _app.get(ENDPOINTS.SEND, (req, res) => {
-            // TODO: validation
             var command = req.params.command;
             if (!command)
                 res.send('No command provided.');
+
+            else if (!authenticated(req.headers))
+                res.send('Authentication failed.');
+
             else
                 sendCommand(command, (text) => {
                     res.send(text);
                 });
         });
+
+        function authenticated(headers) {
+            return Object.keys(headers).some((key) => {
+                if (key.toLowerCase() === AUTH.KEY.toLowerCase())
+                    if (headers[key] === AUTH.VALUE)
+                        return true;
+                    return false;
+            });
+        }
     }
 
     // log to a file maybe?
@@ -57,7 +69,7 @@
             conversation
                 .on('response', (text) => {
                     if (!text)
-                        text = 'Command accepted, but no response.'
+                        text = 'Command was send but there was no response from Assistant.'
                     cb(text);
                 })
                 // .on('ended', (error) => {
