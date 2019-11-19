@@ -1,23 +1,25 @@
 {
-  "name": "NodeGoogleAssistant",
+  "name": "AutoGeeniMotionDetection",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "- Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/config-dev-project-and-account) instructions to configure a Developer Project.\r     - Do not download credentials from the OAuth2 Consent screen.\r - Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/register-device)\r  instructions to register the device model.\r     - Anything can be used for the model settings.\r     - No traits need to be specified.\r     - Download __OAuth 2.0__ credentials when prompted. Rename to `client_secret.json` and place in the root directory.\r - Run `program.js` from the command line.\r     - If `client_tokens.json` does not exist, a browser window will open and a token will be generated. This token will be saved into `client_tokens.json`, so this step only happens once.",
+  "main": "program.js",
+  "dependencies": {
+    "google-assistant": "^0.6.0",
+    "local-devices": "^3.0.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thomasnorris/NodeGoogleAssistant.git"
+    "url": "git+https://github.com/thomasnorris/AutoGeeniMotionDetection.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/thomasnorris/NodeGoogleAssistant/issues"
+    "url": "https://github.com/thomasnorris/AutoGeeniMotionDetection/issues"
   },
-  "homepage": "https://github.com/thomasnorris/NodeGoogleAssistant#readme",
-  "dependencies": {
-    "google-assistant": "^0.6.0"
-  }
+  "homepage": "https://github.com/thomasnorris/AutoGeeniMotionDetection#readme"
 }
