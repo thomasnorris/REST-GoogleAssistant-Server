@@ -29,7 +29,6 @@
 
     var _scanIntervalMs = SCAN_INTERVALS.AWAY;
     var _away = true;
-    var _state = STATES.AWAY;
 
     // start the assistant and scanning
     _assistant = new _assistant(_assistantConfig.auth)
