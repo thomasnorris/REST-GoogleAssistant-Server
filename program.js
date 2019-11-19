@@ -3,6 +3,11 @@
     const CLIENT_SECTET_FILE = 'client_secret.json';
     const CLIENT_TOKENS_FILE = 'client_tokens.json';
 
+    const PORT = 1000;
+    const ENDPOINTS = {
+        SEND: '/send/:command?/:key?'
+    }
+
     var _path = require('path');
     var _assistant = require('google-assistant');
     var _express = require('express');
@@ -29,6 +34,15 @@
         });
 
     function ready() {
+        console.log('Ready. Listening on port:', PORT);
+        _app.get(ENDPOINTS.SEND, (req, res) => {
+            res.set('Content-Type', 'text/html');
+            // TODO: validation
+            var command = req.params.command;
+            if (!command)
+                res.send('<div>No command provided</div>');
+            //sendCommand()
+        });
     }
 
     // log to a file maybe?
@@ -52,4 +66,7 @@
                 });
         });
     }
+
+    _app.set('json spaces', 4);
+    _app.listen(PORT);
 })();
