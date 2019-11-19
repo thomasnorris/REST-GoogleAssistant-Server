@@ -1,4 +1,5 @@
 (function() {
+    const CONFIG_FOLDER = 'config';
     const CLIENT_SECTET_FILE = 'client_secret.json';
     const CLIENT_TOKENS_FILE = 'client_tokens.json';
     const CAM_1 = 'Doggo Cam';
@@ -18,9 +19,9 @@
     var _assistantConfig = {
         auth: {
             // OAuth2 client_secret_*.json downloaded from Google Actions Console and renamed
-            keyFilePath: _path.resolve(__dirname, CLIENT_SECTET_FILE),
+            keyFilePath: _path.resolve(__dirname, CONFIG_FOLDER, CLIENT_SECTET_FILE),
             // Saved tokens file (will be created if it doesn't exist)
-            savedTokensPath: _path.resolve(__dirname, CLIENT_TOKENS_FILE)
+            savedTokensPath: _path.resolve(__dirname, CONFIG_FOLDER, CLIENT_TOKENS_FILE)
         },
         conversation: {
             lang: 'en-US'
