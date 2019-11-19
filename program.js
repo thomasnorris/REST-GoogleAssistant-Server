@@ -1,17 +1,19 @@
 (function() {
-    const CONFIG_FOLDER = 'config';
-    const CLIENT_SECTET_FILE = 'client_secret.json';
-    const CLIENT_TOKENS_FILE = 'client_tokens.json';
-
-    const PORT = 1000;
-    const ENDPOINTS = {
-        SEND: '/send/:command?/:key?'
-    }
-
     var _path = require('path');
     var _assistant = require('google-assistant');
     var _express = require('express');
     var _app = _express();
+
+    const CONFIG_FOLDER = 'config';
+    const CLIENT_SECTET_FILE = 'client_secret.json';
+    const CLIENT_TOKENS_FILE = 'client_tokens.json';
+    const AUTH_FILE = 'auth.json';
+    const PORT = 1000;
+    const AUTH = readJson(_path.resolve(__dirname, CONFIG_FOLDER, AUTH_FILE));
+    const ENDPOINTS = {
+        SEND: '/send/:command?/:key?'
+    }
+
     var _assistantConfig = {
         auth: {
             // OAuth2 client_secret_*.json downloaded from Google Actions Console and renamed
@@ -24,7 +26,7 @@
         }
     };
 
-    // start the assistant and scanning
+    // start the assistant
     _assistant = new _assistant(_assistantConfig.auth)
         .on('ready', () => {
             ready();
@@ -33,6 +35,7 @@
             console.log('Assistant Error: ' + err);
         });
 
+    // listen for commands
     function ready() {
         console.log('Ready. Listening on port:', PORT);
         _app.get(ENDPOINTS.SEND, (req, res) => {
@@ -73,4 +76,9 @@
 
     _app.set('json spaces', 4);
     _app.listen(PORT);
+
+    function readJson(filePath) {
+        var fs = require('fs');
+        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    }
 })();
