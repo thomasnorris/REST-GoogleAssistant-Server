@@ -69,7 +69,7 @@
             conversation
                 .on('response', (text) => {
                     if (!text)
-                        text = 'Command was send but there was no response from Assistant.'
+                        text = 'Command was sent but there was no response from Assistant.'
                     cb(text);
                 })
                 // .on('ended', (error) => {
