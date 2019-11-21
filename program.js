@@ -11,7 +11,7 @@
     const PORT = 1000;
     const AUTH = readJson(_path.resolve(__dirname, CONFIG_FOLDER, AUTH_FILE));
     const ENDPOINTS = {
-        SEND: '/send/:command?/:key?'
+        SEND: '/send/:command?'
     }
 
     var _assistantConfig = {
@@ -57,7 +57,8 @@
                 if (key.toLowerCase() === AUTH.KEY.toLowerCase())
                     if (headers[key] === AUTH.VALUE)
                         return true;
-                    return false;
+                
+                return false;
             });
         }
     }
