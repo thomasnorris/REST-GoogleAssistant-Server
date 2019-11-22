@@ -1,0 +1,8 @@
+{
+    "ADDRESS": "http://address:port",
+    "ENDPOINT": "no leading or trailing / here",
+    "AUTH": {
+        "KEY": "X-Auth",
+        "VALUE": ""
+    }
+}

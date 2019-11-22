@@ -5,7 +5,7 @@
 ## Prerequisites
 ### NPM and Node.js
 - Both of these are required and can be downloaded [here](https://github.com/nodesource/distributions) (if not already installed).
-### Google Assistant
+### Google Assistant Developer Project
 - Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/config-dev-project-and-account) instructions to configure a Google Developer Project.
     - __Do not__ download credentials from the OAuth2 Consen screen.
 - Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/register-device)
@@ -33,3 +33,11 @@
         - Run `node program.js` to start.
 - Optionally, add the following line to `/etc/rc.local` for auto startup:
     - `sudo node "/PATH/TO/REPO/program.js"`.
+
+## Node.js Client
+- The `node_client` folder contains a npm module client to send requests from another Node.js app.
+- To use:
+    - Download the `node_client` folder and place in desired project folder.
+    - Rename `config_template.json` to `config.json` and configure to match the server.
+    - Run `npm install request` in the desired project.
+    - Access with `var _assistant = require('path/to/assistant-client.js')`.
