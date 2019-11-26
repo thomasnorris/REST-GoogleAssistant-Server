@@ -12,8 +12,8 @@ var _outerFunc = module.exports = {
         if (!Array.isArray(commands))
             commands = [commands];
 
-            // build promises to send each command
-            var promiseArr = commands.map((command) => {
+        // build promises to send each command
+        var promiseArr = commands.map((command) => {
             return new Promise((resolve, reject) => {
                 var reqOptions = {
                     url:CFG.ADDRESS + '/' + CFG.ENDPOINT + '/' + encodeURI(command),
@@ -38,14 +38,30 @@ var _outerFunc = module.exports = {
         });
 
         return new Promise((resolve, reject) => {
-            Promise.all(promiseArr).then((resolveArr) => {
-                // all requests have been sent, exit
-                resolve(resolveArr);
+            // run requests sequentially
+            // see: https://decembersoft.com/posts/promises-in-serial-with-array-reduce/
+            promiseArr.reduce((promiseChain, currentTask) => {
+                return promiseChain.then(chainResults =>
+                    currentTask.then(currentResult =>
+                        [...chainResults, currentResult]
+                    )
+                );
+            }, Promise.resolve([])).then((results) => {
+                resolve('Success');
             }).catch((err) => {
-                // at least one request failed, exit
-                reject(err);
+                reject('Failure');
             });
         });
+
+        // return new Promise((resolve, reject) => {
+        //     Promise.all(promiseArr).then((resolveArr) => {
+        //         // all requests have been sent, exit
+        //         resolve(resolveArr);
+        //     }).catch((err) => {
+        //         // at least one request failed, exit
+        //         reject(err);
+        //     });
+        // });
     }
 }
 
