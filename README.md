@@ -27,7 +27,7 @@
         - This folder should now contain:
             - `client_secret.json`
             - `client_tokens.json`
-            - `device.json`
+            - `config.json`
     - In the `root` directory:
         - Run `npm install` to install packages.
             - Also run `npm rebuild` if instructed to do so.
