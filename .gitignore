@@ -1,5 +1,5 @@
 node_modules
 config/*
-!config/auth_template.json
+!config/config_template.json
 
 node_client/config.json

@@ -1,0 +1,11 @@
+{
+    "DEVICE": {
+        "MODEL_ID": "",
+        "LATITUDE": XX.XXXXXX,
+        "LONGITUDE": XX.XXXXXX
+    },
+    "AUTH": {
+        "KEY": "X-Auth",
+        "VALUE": ""
+    }
+}

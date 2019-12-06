@@ -4,12 +4,13 @@
     var _express = require('express');
     var _app = _express();
 
+    const PORT = 1000;
+
     const CONFIG_FOLDER = 'config';
+    const CONFIG_FILE = 'config.json';
     const CLIENT_SECTET_FILE = 'client_secret.json';
     const CLIENT_TOKENS_FILE = 'client_tokens.json';
-    const AUTH_FILE = 'auth.json';
-    const PORT = 1000;
-    const AUTH = readJson(_path.resolve(__dirname, CONFIG_FOLDER, AUTH_FILE));
+    const CONFIG = readJson(_path.resolve(__dirname, CONFIG_FOLDER, CONFIG_FILE));
     const ENDPOINTS = {
         SEND: '/send/:command?'
     }
@@ -22,7 +23,15 @@
             savedTokensPath: _path.resolve(__dirname, CONFIG_FOLDER, CLIENT_TOKENS_FILE)
         },
         conversation: {
-            lang: 'en-US'
+            isNew: true,
+            lang: 'en-US',
+            deviceModelId: CONFIG.DEVICE.MODEL_ID,
+            deviceLocation: {
+                coordinates: {
+                    latitude: CONFIG.DEVICE.LATITUDE,
+                    longitude: CONFIG.DEVICE.LONGITUDE
+                }
+            }
         }
     };
 
@@ -40,11 +49,11 @@
         console.log('Ready. Listening on port:', PORT);
         _app.get(ENDPOINTS.SEND, (req, res) => {
             var command = req.params.command;
-            if (!command)
-                res.send('No command provided.');
+            if (!authenticated(req.headers))
+                res.status(401).send('Authentication failed.');
 
-            else if (!authenticated(req.headers))
-                res.send('Authentication failed.');
+            else if (!command)
+                res.status(400).send('No command provided.');
 
             else
                 sendCommand(command, (text) => {
@@ -54,10 +63,10 @@
 
         function authenticated(headers) {
             return Object.keys(headers).some((key) => {
-                if (key.toLowerCase() === AUTH.KEY.toLowerCase())
-                    if (headers[key] === AUTH.VALUE)
+                if (key.toLowerCase() === CONFIG.AUTH.KEY.toLowerCase())
+                    if (headers[key] === CONFIG.AUTH.VALUE)
                         return true;
-                
+
                 return false;
             });
         }
@@ -73,14 +82,10 @@
                         text = 'Command was sent but there was no response from the Assistant.'
                     cb(text);
                 })
-                // .on('ended', (error) => {
-                //     if (error) {
-                //         console.log('Conversation Ended Error:', error);
-                //     } else {
-                //         console.log('Conversation Complete');
-                //         //conversation.end();
-                //     }
-                // })
+                .on('ended', (error) => {
+                    // should probably do something with this
+                    conversation.end();
+                })
                 .on('error', (error) => {
                    cb('Assistant Error: ' + error);
                 });

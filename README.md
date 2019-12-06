@@ -11,7 +11,7 @@
 - Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/register-device)
  instructions to register the device model:
     - Anything can be used for the *model settings*.
-    - No *traits* need to be specified.
+    - Select required *traits*.
     - Download __OAuth 2.0__ credentials when prompted and rename to `client_secret.json`. This will be needed later.
 ## Installation
 - Everything in the __Prerequisites__ section must be completed.
@@ -21,12 +21,13 @@
 - After cloning to the target device (Windows or otherwise):
     - In the `config` folder:
         - Place `client_secret.json` (downloaded earlier) here.
-        - Copy/rename `auth_template.json` to `auth.json` and enter a desired auth key/value pair. Requests __must__ use this key/value pair as a header to send requests.
+        - Copy/rename `config_template.json` to `config.json`
+            - Enter a desired auth key/value pair. Requests __must__ use this key/value pair as a header to send requests.
+            - Enter the matching device model parameters.
         - This folder should now contain:
             - `client_secret.json`
             - `client_tokens.json`
-            - `auth.json`
-            - `auth_template.json`
+            - `device.json`
     - In the `root` directory:
         - Run `npm install` to install packages.
             - Also run `npm rebuild` if instructed to do so.
