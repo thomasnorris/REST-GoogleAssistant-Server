@@ -5,7 +5,9 @@
     var _app = _express();
 
     var _logger = require(_path.resolve(__dirname, 'Node-Logger', 'app.js'));
-    _logger.LogDebug('Test log debug').catch((e) => {console.log(e);})
+    _logger.Init().catch((e) => {
+        console.log(e);
+    });
 
     const PORT = 1000;
 
