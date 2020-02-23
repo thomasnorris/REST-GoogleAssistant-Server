@@ -41,10 +41,13 @@
     // start the assistant
     _assistant = new _assistant(_assistantConfig.auth)
         .on('ready', () => {
+            _logger.Info('Assistant ready.');
             ready();
         })
         .on('error', (err) => {
-            console.log('Assistant Error: ' + err);
+            err = 'Assistant error: ' + err;
+            _logger.Error(err);
+            console.log(err);
         });
 
     // listen for commands
@@ -54,22 +57,21 @@
             var command = req.params.command;
             if (!authenticated(req.headers)) {
                 var msg = 'Authentication failed.';
-                //_logger.LogWarning(msg).catch((e) => { console.log(e); });
+                _logger.Warning(msg);
                 res.status(401).send(msg);
             }
 
             else if (!command) {
                 var msg = 'Command not provided.';
-                //_logger.LogWarning(msg).catch((e) => { console.log(e); });
+                _logger.Warning(msg);
                 res.status(400).send(msg);
             }
 
-            else {
-                //_logger.LogInfo('Command sent: ' + command).catch((e) => { console.log(e); });
+            else
                 sendCommand(command, (text) => {
+                    _logger.Info('Command sent: "' + command + '". Assistant response: "' + text + '".');
                     res.send(text);
                 });
-            }
         });
 
         function authenticated(headers) {
@@ -98,7 +100,7 @@
                     conversation.end();
                 })
                 .on('error', (error) => {
-                   cb('Assistant Error: ' + error);
+                    conversation.end();
                 });
         });
     }
