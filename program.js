@@ -5,9 +5,7 @@
     var _app = _express();
 
     var _logger = require(_path.resolve(__dirname, 'Node-Logger', 'app.js'));
-    _logger.Init().catch((e) => {
-        console.log(e);
-    });
+    _logger.Init();
 
     const PORT = 1000;
 
@@ -54,16 +52,24 @@
         console.log('Ready. Listening on port:', PORT);
         _app.get(ENDPOINTS.SEND, (req, res) => {
             var command = req.params.command;
-            if (!authenticated(req.headers))
-                res.status(401).send('Authentication failed.');
+            if (!authenticated(req.headers)) {
+                var msg = 'Authentication failed.';
+                //_logger.LogWarning(msg).catch((e) => { console.log(e); });
+                res.status(401).send(msg);
+            }
 
-            else if (!command)
-                res.status(400).send('No command provided.');
+            else if (!command) {
+                var msg = 'Command not provided.';
+                //_logger.LogWarning(msg).catch((e) => { console.log(e); });
+                res.status(400).send(msg);
+            }
 
-            else
+            else {
+                //_logger.LogInfo('Command sent: ' + command).catch((e) => { console.log(e); });
                 sendCommand(command, (text) => {
                     res.send(text);
                 });
+            }
         });
 
         function authenticated(headers) {
