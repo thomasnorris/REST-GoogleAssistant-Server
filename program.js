@@ -68,13 +68,7 @@
 
             else
                 sendCommand(command, (text) => {
-                    _logger.Info.Sync('Command: "' + command + '."')
-                        .then((msg) => {
-                            _logger.Info.Async('Response: ' + text)
-                        })
-                        .catch((err) => {
-                            _logger.Error.Async(err);
-                        });
+                    _logger.Info.Async('Command: "' + command + '". Response: "' + text + '".');
                     res.send(text);
                 });
         });
