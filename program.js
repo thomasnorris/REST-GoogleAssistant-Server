@@ -1,11 +1,11 @@
-(function() {
+(async function() {
     var _path = require('path');
+    var _logger = require(_path.resolve(__dirname, 'Node-Logger', 'app.js'));
+    await _logger.Init();
+
     var _assistant = require('google-assistant');
     var _express = require('express');
     var _app = _express();
-
-    var _logger = require(_path.resolve(__dirname, 'Node-Logger', 'app.js'));
-    _logger.Init();
 
     const PORT = 1000;
 
@@ -41,12 +41,11 @@
     // start the assistant
     _assistant = new _assistant(_assistantConfig.auth)
         .on('ready', () => {
-            _logger.Info('Assistant ready.');
             ready();
         })
         .on('error', (err) => {
             err = 'Assistant error: ' + err;
-            _logger.Error(err);
+            _logger.Error.Async(err);
             console.log(err);
         });
 
@@ -57,19 +56,25 @@
             var command = req.params.command;
             if (!authenticated(req.headers)) {
                 var msg = 'Authentication failed.';
-                _logger.Warning(msg);
+                _logger.Warning.Async(msg);
                 res.status(401).send(msg);
             }
 
             else if (!command) {
                 var msg = 'Command not provided.';
-                _logger.Warning(msg);
+                _logger.Warning.Async(msg);
                 res.status(400).send(msg);
             }
 
             else
                 sendCommand(command, (text) => {
-                    _logger.Info('Command sent: "' + command + '". Assistant response: "' + text + '".');
+                    _logger.Info.Sync('Command: "' + command + '."')
+                        .then((msg) => {
+                            _logger.Info.Async('Response: ' + text)
+                        })
+                        .catch((err) => {
+                            _logger.Error.Async(err);
+                        });
                     res.send(text);
                 });
         });
