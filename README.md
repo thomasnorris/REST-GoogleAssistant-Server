@@ -36,4 +36,4 @@
     - `sudo node "/PATH/TO/REPO/program.js"`.
 
 ## Client Submodule
-- View the submodule and instructions for use (here)[https://github.com/thomasnorris/REST-GoogleAssistant-Client].
+- View the submodule and instructions for use [here](https://github.com/thomasnorris/REST-GoogleAssistant-Client).
