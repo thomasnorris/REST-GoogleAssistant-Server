@@ -1,5 +1,2 @@
 node_modules
-config/*
-!config/config_template.json
-
-node_client/config.json
+config/config.json

@@ -35,10 +35,5 @@
 - Optionally, add the following line to `/etc/rc.local` for auto startup:
     - `sudo node "/PATH/TO/REPO/program.js"`.
 
-## Node.js Client
-- The `node_client` folder contains a npm module client to send requests from another Node.js app.
-- To use:
-    - Download the `node_client` folder and place in desired project folder.
-    - Rename `config_template.json` to `config.json` and configure to match the server.
-    - Run `npm install request` in the desired project.
-    - Access with `var _assistant = require('path/to/assistant-client.js')`.
+## Client Submodule
+- View the submodule and instructions for use (here)[https://github.com/thomasnorris/REST-GoogleAssistant-Client].
