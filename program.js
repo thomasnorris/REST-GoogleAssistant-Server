@@ -68,8 +68,10 @@
 
             else
                 sendCommand(command, (text) => {
-                    _logger.Info.Async('Command sent.', command)
-                    _logger.Info.Async('Response received.', text);
+                    _logger.Info.Sync('Command sent.', command)
+                        .then(() => {
+                            _logger.Info.Async('Response received.', text);
+                        });
                     res.send(text);
                 });
         });
