@@ -41,11 +41,11 @@
     // start the assistant
     _assistant = new _assistant(_assistantConfig.auth)
         .on('ready', () => {
-            _logger.Info.Async('Assistant ready.');
+            _logger.Info.Async('Assistant ready');
             ready();
         })
         .on('error', (err) => {
-            _logger.Error.Async('Assistant error.', err);
+            _logger.Error.Async('Assistant error', err);
             console.log('Assistant error: ' + err);
         });
 
@@ -55,22 +55,22 @@
         _app.get(ENDPOINTS.SEND, (req, res) => {
             var command = req.params.command;
             if (!authenticated(req.headers)) {
-                var msg = 'Authentication failure.';
+                var msg = 'Authentication failure';
                 _logger.Warning.Async(msg);
                 res.status(401).send(msg);
             }
 
             else if (!command) {
-                var msg = 'Command not provided.';
+                var msg = 'Command not provided';
                 _logger.Warning.Async(msg);
                 res.status(400).send(msg);
             }
 
             else
                 sendCommand(command, (text) => {
-                    _logger.Info.Sync('Command sent.', command)
+                    _logger.Info.Sync('Command sent', command)
                         .then(() => {
-                            _logger.Info.Async('Response received.', text);
+                            _logger.Info.Async('Response received', text);
                         });
                     res.send(text);
                 });
