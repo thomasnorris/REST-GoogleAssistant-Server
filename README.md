@@ -18,8 +18,10 @@
 - It is recommended clone to a Windows machine first to generate the `client_tokens.json` file.
     - This will be generated upon first run of the program.
     - Once it is generated, copy it into the __config__ folder.
+- Clone the repository with `git clone --recurse-submodules` to update submodules.
 - After cloning to the target device (Windows or otherwise):
-    - In the `config` folder:
+    - Follow the [Node-Logger readme](https://github.com/thomasnorris/Node-Logger) for instructions on setting up the logger.
+    - In the `root config` folder:
         - Place `client_secret.json` (downloaded earlier) here.
         - Copy/rename `config_template.json` to `config.json`
             - Enter a desired auth key/value pair. Requests __must__ use this key/value pair as a header to send requests.
