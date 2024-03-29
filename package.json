@@ -4,7 +4,7 @@
   "description": "- As of `11/19/2019`, this will not work on an __ARMv6__ device (such as a RPi Zero W). This will work on an __ARMv7__ device such as the Raspberry Pi 3B.\r     - See [this](https://github.com/grpc/grpc/issues/13258) and [this](https://github.com/mapbox/node-pre-gyp/issues/348).\r ### NPM and Node.js\r - Both of these are required and can be downloaded [here](https://github.com/nodesource/distributions).\r ### Google Assistant\r - Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/config-dev-project-and-account) instructions to configure a Google Developer Project.\r     - Do not download credentials from the OAuth2 Consent screen.\r - Follow [these](https://developers.google.com/assistant/sdk/guides/service/python/embed/register-device)\r  instructions to register the device model.\r     - Anything can be used for the *model settings*.\r     - No *traits* need to be specified.\r     - Download __OAuth 2.0__ credentials when prompted and rename to `client_secret.json`.\r ## Installation\r - Everything in the __Prerequisites__ section must be done first!\r - After cloning:\r     - Place `client_secret.json` downloaded earlier in the root of this repository.\r     - Run `npm install` to install packages.\r     - Run `node program.js` to start.\r - Optionally, add the following line to `/etc/rc.local` for auto startup:\r     - `sudo node \"/PATH/TO/REPO/program.js\"`.",
   "main": "program.js",
   "dependencies": {
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "google-assistant": "^0.7.0"
   },
   "devDependencies": {},
